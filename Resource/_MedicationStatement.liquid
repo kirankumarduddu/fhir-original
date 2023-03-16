@@ -1,3 +1,4 @@
+{% if medicationStatement %}
 {
     "fullUrl":"urn:uuid:{{ ID }}",
     "resource":{
@@ -10,7 +11,7 @@
             { {% include 'DataType/Identifier' Identifier: id -%} },
             {% endfor -%}
         ],
-        "status":"{{ medicationStatement.statusCode.code | downcase | get_property: 'ValueSet/MedicationStatementStatus' }}",
+        "status":"{{ medicationStatement.statusCode.code | downcase | get_property: 'ValueSet/MedicationStatementStatus' | default: 'unknown' }}",
         "effectivePeriod":
         {
             "start":"{{ medicationStatement.effectiveTime.low.value | format_as_date_time }}",
@@ -39,3 +40,4 @@
         "url":"MedicationStatement/{{ ID }}",
     },
 },
+{% endif %}
