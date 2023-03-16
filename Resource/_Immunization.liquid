@@ -18,10 +18,10 @@
             {% endif -%}
         {% endfor -%}
 
-        {% if immunization.effectiveTime.low -%}
-            "occurrenceDateTime": "{{ immunization.effectiveTime.low.value | format_as_date_time }}",
+        {% if immunization.effectiveTime.low != null -%}
+            "occurrence": { "dateTime": "{{ immunization.effectiveTime.low.value | format_as_date_time }}" },
         {% else -%}
-            "occurrenceDateTime": "{{ immunization.effectiveTime.value | format_as_date_time }}",
+            "occurrence": { "dateTime": "{{ immunization.effectiveTime.value | format_as_date_time }}" },
         {% endif -%}
 
         {% assign consumables = immunization.consumable | to_array -%}
