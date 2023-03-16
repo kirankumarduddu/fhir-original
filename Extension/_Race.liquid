@@ -1,4 +1,5 @@
-{% if Race.raceCode or Race.sdtc_raceCode -%}
+{% if Race.raceCode -%}
+    "url" : "http://hl7.org/fhir/us/core/StructureDefinition/us-core-race",
     "extension":
     [
         {% assign raceCodes1 = Race.raceCode | to_array -%}
@@ -18,57 +19,31 @@
                         {% else -%}
                             "display":"Unknown",
                         {% endif -%}
-                    }
+                    },
                 {% else -%}
                     {% if r.code == '1002-5' or r.code == '2028-9' or r.code == '2054-5' or r.code == '2076-8' or r.code == '2106-3' -%}
                         "url" : "ombCategory",
-                        {% assign raceSystem = 'http://hl7.org/fhir/us/core/ValueSet/omb-race-category|6.0.0-ballot' %}
                     {% else -%}
                         "url" : "detailed",
-                        {% assign raceSystem = r.system %}
                     {% endif -%}
-                    "valueCoding": { {% include 'DataType/Coding' Coding: r -%} }
+                    "valueCoding": { {% include 'DataType/Coding' Coding: r -%} },
                 {% endif -%}
-            }{% unless forloop.last %},{% endunless %}
+            },
         {% endfor -%}
-    ],
-{% endif -%}
-{% if not Race.raceCode and not Race.sdtc_raceCode %}
-    "extension":
-    [
         {
-            "url" : "ombCategory",
-            "valueCoding":
-            {
-                "system":"http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
-                "code":"NI",
-                "display":"Unknown"
-            }
-        },
-        {
-            "url" : "detailed",
-            "valueCoding":
-            {
-                "system": "http://hl7.org/fhir/us/core/ValueSet/omb-race-category|6.0.0-ballot",
-                "code": "UNK",
-                "display": "Unknown"
-            }
+            "url": "text",
+            {% if Race.sdtc_raceCode -%}
+                "valueString":"Mixed",
+            {% elsif Race.raceCode.nullFlavor -%}
+                {% assign normalizedCode = Race.raceCode.nullFlavor | upcase -%}
+                {% if normalizedCode == 'ASKU' -%}
+                    "valueString":"Asked but no answer",
+                {% else -%}
+                    "valueString":"Unknown",
+                {% endif -%}
+            {% else -%}
+                "valueString":"{{Race.raceCode.displayName}}",
+            {% endif -%}
         }
     ],
-{% endif -%}
-{% if Race.sdtc_raceCode %}
-    {
-        "url": "text",
-        "valueString": "Mixed"
-    }
-{% elsif Race.raceCode.nullFlavor %}
-    {
-        "url": "text",
-        "valueString": {% if normalizedCode == 'ASKU' -%} "Asked but no answer" {% else -%} "Unknown" {% endif -%}
-    }
-{% else %}
-    {
-        "url": "text",
-        "valueString": "{{Race.raceCode.coding[0].display}}"
-    }
 {% endif -%}
