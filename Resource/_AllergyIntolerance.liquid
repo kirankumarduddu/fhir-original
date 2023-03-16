@@ -25,6 +25,7 @@
             {% assign relationships = allergyEntry.entryRelationship | to_array -%}
             {% for r in relationships -%}
             {
+                "manifestation":[],
                 {% if allergyEntry.participant.participantRole.playingEntity.code.translation -%}
                     "substance":{ {% include 'DataType/CodeableConcept' CodeableConcept: allergyEntry.participant.participantRole.playingEntity.code.translation -%} },
                 {% else -%}
