@@ -53,4 +53,13 @@
                                             "display": "Asked but no answer"
                                         }
                                     }
+                                ]
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% endif -%}
+            }{% unless forloop.last %},{% endunless %}
+        {% endfor -%}
+    ]
+{% endif -%}
                                
