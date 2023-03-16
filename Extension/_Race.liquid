@@ -69,6 +69,6 @@
 {% else %}
     {
         "url": "text",
-        "valueString": "{{Race.raceCode.displayName}}"
+        "valueString": "{{Race.raceCode.coding[0].display}}"
     }
 {% endif -%}
