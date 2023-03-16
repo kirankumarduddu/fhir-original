@@ -23,27 +23,34 @@
                 {% else -%}
                     {% if r.code == '1002-5' or r.code == '2028-9' or r.code == '2054-5' or r.code == '2076-8' or r.code == '2106-3' -%}
                         "url" : "ombCategory",
+                        {% if r.code in ['1002-5', '2028-9', '2054-5', '2076-8', '2106-3'] %}
+                            {% assign ombRaceCategoryCodeSystem = 'http://hl7.org/fhir/us/core/ValueSet/omb-race-category|6.0.0-ballot' %}
+                        {% endif %}
+                        "valueCoding": { {% include 'DataType/Coding' Coding: r -%} },
                     {% else -%}
                         "url" : "detailed",
+                        {% assign ombRaceCategoryCodeSystem = '' %}
+                        "valueCoding": { {% include 'DataType/Coding' Coding: r -%} },
+                        {% if r.code in ['1002-5', '2028-9', '2054-5', '2076-8', '2106-3'] %}
+                            {% assign ombRaceCategoryCodeSystem = 'http://hl7.org/fhir/us/core/ValueSet/omb-race-category|6.0.0-ballot' %}
+                        {% endif %}
                     {% endif -%}
-                    "valueCoding": { {% include 'DataType/Coding' Coding: r -%} },
-                {% endif -%}
-            },
-        {% endfor -%}
-        {
-            "url": "text",
-            {% if Race.sdtc_raceCode -%}
-                "valueString":"Mixed",
-            {% elsif Race.raceCode.nullFlavor -%}
-                {% assign normalizedCode = Race.raceCode.nullFlavor | upcase -%}
-                {% if normalizedCode == 'ASKU' -%}
-                    "valueString":"Asked but no answer",
-                {% else -%}
-                    "valueString":"Unknown",
-                {% endif -%}
-            {% else -%}
-                "valueString":"{{Race.raceCode.displayName}}",
-            {% endif -%}
-        }
-    ],
-{% endif -%}
+                    {% if ombRaceCategoryCodeSystem != '' %}
+                        {% if r.code not in ['1002-5', '2028-9', '2054-5', '2076-8', '2106-3'] %}
+                            {% if not (r.system == ombRaceCategoryCodeSystem and r.code in expand('http://hl7.org/fhir/us/core/ValueSet/omb-race-category|6.0.0-ballot').contains.code) %}
+                                "valueCoding": {
+                                    "system":"{{ r.system }}",
+                                    "code":"{{ r.code }}",
+                                    "display":"{{ r.display }}",
+                                    "userSelected": {{ r.userSelected | default: false }}
+                                },
+                                "modifierExtension": [
+                                    {
+                                        "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-race",
+                                        "valueCoding": {
+                                            "system": "{{ ombRaceCategoryCodeSystem }}",
+                                            "code": "asked",
+                                            "display": "Asked but no answer"
+                                        }
+                                    }
+                               
