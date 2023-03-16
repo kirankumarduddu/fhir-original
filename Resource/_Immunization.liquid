@@ -20,7 +20,7 @@
         {% endfor -%}
         
         {% if immunization.negationInd == "true" -%}
-            "occurrenceDateTime": "{{ 'now' | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+            "occurrenceDateTime": "{{ immunization.effectiveTime.value | format_as_date_time }}",
         {% else %}
             {% if immunization.effectiveTime.low -%}
                 "occurrenceDateTime": "{{ immunization.effectiveTime.low.value | format_as_date_time }}",
