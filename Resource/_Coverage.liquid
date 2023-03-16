@@ -1,3 +1,4 @@
+{% if payerEntry and patientID and organizationID %}
 {
     "fullUrl":"urn:uuid:{{ ID }}",
     "resource":{
@@ -11,6 +12,14 @@
             {% endfor -%}
         ],
         "status":"{{ payerEntry.statusCode.code | get_property: 'ValueSet/FMStatus' }}",
+        "beneficiary": {
+            "reference": "Patient/{{ patientID }}"
+        },
+        "payor": [
+            {
+                "reference": "Organization/{{ organizationID }}"
+            }
+        ],
         "relationship":
         {
             {% include 'DataType/CodeableConcept' CodeableConcept: payerEntry.code -%}
@@ -21,3 +30,4 @@
         "url":"Coverage/{{ ID }}",
     },
 },
+{% endif %}
