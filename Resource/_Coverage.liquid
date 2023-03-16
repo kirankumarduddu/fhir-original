@@ -11,7 +11,7 @@
             { {% include 'DataType/Identifier' Identifier: id -%} },
             {% endfor -%}
         ],
-        "status":"{{ payerEntry.statusCode.code | get_property: 'ValueSet/FMStatus' }}",
+        "status":"{{ payerEntry.statusCode.code | get_property: 'ValueSet/FMStatus' | default: 'unknown' }}",
         "beneficiary": {
             "reference": "Patient/{{ patientID }}"
         },
