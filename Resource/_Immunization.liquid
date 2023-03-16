@@ -20,14 +20,16 @@
         {% endfor -%}
         
         {% if immunization.negationInd == "true" -%}
-            "occurrenceDateTime": "{{ immunization.effectiveTime.value | format_as_date_time }}",
+            "occurrenceDateTime": "{{ immunization.effectiveTime.value | format_as_date_time | default: 'now' | date: '%Y-%m-%dT%H:%M:%S%z' }}",
         {% else %}
             {% if immunization.effectiveTime.low -%}
-                "occurrenceDateTime": "{{ immunization.effectiveTime.low.value | format_as_date_time }}",
+                "occurrenceDateTime": "{{ immunization.effectiveTime.low.value | format_as_date_time | default: 'now' | date: '%Y-%m-%dT%H:%M:%S%z' }}",
             {% else -%}
-                "occurrenceDateTime": "{{ immunization.effectiveTime.value | format_as_date_time }}",
+                "occurrenceDateTime": "{{ immunization.effectiveTime.value | format_as_date_time | default: 'now' | date: '%Y-%m-%dT%H:%M:%S%z' }}",
             {% endif %}
         {% endif %}
+
+
 
         {% assign consumables = immunization.consumable | to_array -%}
         {% for consumable in consumables -%}
