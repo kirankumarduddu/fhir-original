@@ -18,11 +18,13 @@
                 "statusReason": { {% include 'DataType/CodeableConcept' CodeableConcept: entryRelationship.observation.code -%} },
             {% endif -%}
         {% endfor -%}
-
+        
         {% if immunization.effectiveTime.low -%}
             "occurrenceDateTime": "{{ immunization.effectiveTime.low.value | format_as_date_time }}",
-        {% else -%}
+        {% elsif immunization.effectiveTime.value -%}
             "occurrenceDateTime": "{{ immunization.effectiveTime.value | format_as_date_time }}",
+        {% else -%}
+            "occurrenceDateTime": "{{ 'now' | date: '%Y-%m-%dT%H:%M:%S%z' }}",
         {% endif -%}
 
         {% assign consumables = immunization.consumable | to_array -%}
