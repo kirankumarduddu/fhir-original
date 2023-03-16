@@ -19,13 +19,14 @@
             {% endif -%}
         {% endfor -%}
         
-        {% if immunization.effectiveTime.low -%}
-            "occurrenceDateTime": "{{ immunization.effectiveTime.low.value | format_as_date_time }}",
-        {% elsif immunization.effectiveTime.value -%}
-            "occurrenceDateTime": "{{ immunization.effectiveTime.value | format_as_date_time }}",
-        {% else -%}
-            "occurrenceDateTime": "{{ immunization.effectiveTime.value | format_as_date_time }}",
-        {% endif -%}
+        {% assign date_input = immunization.effectiveTime.low.value %}
+        {% assign parsed_date = date_input | date: "%Y-%m-%dT%H:%M:%S%z" %}
+        {% if parsed_date != "Invalid Date" %}
+            "occurrenceDateTime": "{{ parsed_date }}",
+        {% else %}
+            "occurrenceDateTime": "{{ 'now' | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+        {% endif %}
+
 
         {% assign consumables = immunization.consumable | to_array -%}
         {% for consumable in consumables -%}
