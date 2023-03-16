@@ -242,11 +242,8 @@
       "draft": {
         "code": "draft"
       },
-      "unknown": {
-        "code": "unknown"
-      },
       "__default__": {
-        "code": ""
+        "code": "draft"
       }
     },
     "ValueSet/Gender": {
