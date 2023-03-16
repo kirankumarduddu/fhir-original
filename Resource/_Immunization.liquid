@@ -1,9 +1,10 @@
 {
-    "fullUrl": "urn:uuid:{{ID}}",
-    "resource": {
+    "fullUrl":"urn:uuid:{{ID}}",
+    "resource":{
         "resourceType": "Immunization",
-        "id": "{{ID}}",
-        "identifier": [
+        "id":"{{ID}}",
+        "identifier":
+        [
             {% assign ids = immunization.id | to_array -%}
             {% for id in ids -%}
                 { {% include 'DataType/Identifier' Identifier: id -%} },
@@ -18,10 +19,12 @@
             {% endif -%}
         {% endfor -%}
 
-        {% if immunization.effectiveTime.low != null -%}
-            "occurrence": { "dateTime": "{{ immunization.effectiveTime.low.value | format_as_date_time }}" },
+        {% if immunization.effectiveTime.low -%}
+            "occurrenceDateTime": "{{ immunization.effectiveTime.low.value | format_as_date_time }}",
+        {% elsif immunization.effectiveTime.nullFlavor -%}
+            "occurrenceDateTime": "{{ immunization.effectiveTime.nullFlavor }}",
         {% else -%}
-            "occurrence": { "dateTime": "{{ immunization.effectiveTime.value | format_as_date_time }}" },
+            "occurrenceDateTime": "{{ immunization.effectiveTime.value | format_as_date_time }}",
         {% endif -%}
 
         {% assign consumables = immunization.consumable | to_array -%}
@@ -44,8 +47,8 @@
         "route":{ {% include 'DataType/CodeableConcept' CodeableConcept: immunization.routeCode -%}},
         "site":{ {% include 'DataType/CodeableConcept' CodeableConcept: immunization.approachSiteCode -%} },      
     },
-    "request": {
-        "method": "PUT",
-        "url": "Immunization/{{ID}}"
-    }
-},
+    "request":{
+        "method":"PUT",
+        "url":"Immunization/{{ID}}",
+    },
+}
