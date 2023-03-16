@@ -1,10 +1,9 @@
 {
-    "fullUrl":"urn:uuid:{{ID}}",
-    "resource":{
+    "fullUrl": "urn:uuid:{{ID}}",
+    "resource": {
         "resourceType": "Immunization",
-        "id":"{{ID}}",
-        "identifier":
-        [
+        "id": "{{ID}}",
+        "identifier": [
             {% assign ids = immunization.id | to_array -%}
             {% for id in ids -%}
                 { {% include 'DataType/Identifier' Identifier: id -%} },
@@ -18,18 +17,12 @@
                 "statusReason": { {% include 'DataType/CodeableConcept' CodeableConcept: entryRelationship.observation.code -%} },
             {% endif -%}
         {% endfor -%}
-        
-        {% if immunization.negationInd == "true" -%}
-            "occurrenceDateTime": "{{ immunization.effectiveTime.value | format_as_date_time | default: 'now' | date: '%Y-%m-%dT%H:%M:%S%z' }}",
-        {% else %}
-            {% if immunization.effectiveTime.low -%}
-                "occurrenceDateTime": "{{ immunization.effectiveTime.low.value | format_as_date_time | default: 'now' | date: '%Y-%m-%dT%H:%M:%S%z' }}",
-            {% else -%}
-                "occurrenceDateTime": "{{ immunization.effectiveTime.value | format_as_date_time | default: 'now' | date: '%Y-%m-%dT%H:%M:%S%z' }}",
-            {% endif %}
-        {% endif %}
 
-
+        {% if immunization.effectiveTime.low -%}
+            "occurrenceDateTime": "{{ immunization.effectiveTime.low.value | format_as_date_time }}",
+        {% else -%}
+            "occurrenceDateTime": "{{ immunization.effectiveTime.value | format_as_date_time }}",
+        {% endif -%}
 
         {% assign consumables = immunization.consumable | to_array -%}
         {% for consumable in consumables -%}
@@ -51,8 +44,8 @@
         "route":{ {% include 'DataType/CodeableConcept' CodeableConcept: immunization.routeCode -%}},
         "site":{ {% include 'DataType/CodeableConcept' CodeableConcept: immunization.approachSiteCode -%} },      
     },
-    "request":{
-        "method":"PUT",
-        "url":"Immunization/{{ID}}",
-    },
+    "request": {
+        "method": "PUT",
+        "url": "Immunization/{{ID}}"
+    }
 },
