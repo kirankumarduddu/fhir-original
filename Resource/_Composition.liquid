@@ -8,53 +8,39 @@
       "value": "{{ composition.id.root }}"
     },
     "status": "final",
-    "type": {
-      {% assign codes = composition.code | to_array -%}
-      {% include 'DataType/CodeableConcept' CodeableConcept: codes.first -%}
-    },
-    "date": "{{ composition.effectiveTime.value | format_as_date_time }}",
+    "type": "{{ composition.code }}",
+    "date": "{{ composition.effectiveTime.value }}",
     "title": "{{ composition.title._ }}",
     "confidentiality": "{{ composition.confidentialityCode.code }}",
     "attester": [
       {
-        {% if composition.legalAuthenticator -%}
-        "mode": "legal",
-        {% endif -%}
-        {% if composition.legalAuthenticator -%}
-        "time": "{{ composition.legalAuthenticator.time.value | format_as_date_time }}",
-        {% endif -%}
+        "mode": "{{ composition.legalAuthenticator ? 'legal' : '' }}",
+        "time": "{{ composition.legalAuthenticator.time.value }}",
         "party": {
-          {% if practitionerId -%}
-          "reference": "Practitioner/{{practitionerId}}",
-          {% endif -%}
+          "reference": "{{ practitionerId ? 'Practitioner/' + practitionerId : '' }}"
         }
       }
     ],
     "event": [
       {
         "period": {
-          "start": "{{ composition.documentationOf.serviceEvent.effectiveTime.low.value | format_as_date_time }}",
-          "end": "{{ composition.documentationOf.serviceEvent.effectiveTime.high.value | format_as_date_time }}"
+          "start": "{{ composition.documentationOf.serviceEvent.effectiveTime.low.value }}",
+          "end": "{{ composition.documentationOf.serviceEvent.effectiveTime.high.value }}"
         }
       }
     ],
     "section": [
-      {% assign components = composition.component.structuredBody.component | to_array -%}
-      {% for component in components -%}
+      {% for component in composition.component.structuredBody.component %}
       {
-        {% if component.section -%}
-          "title": "{{ component.section.title._ | default: component.section.code.displayName }}",
-          "text": {
-            "status": "generated",
-            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">{{ (component.section.title._ | default: component.section.code.displayName) | escape }}</div>"
-          },
-          "code": {
-            {% include 'DataType/CodeableConcept' CodeableConcept: component.section.code -%}
-          },
-          "mode": "snapshot"
-        {% endif -%}
-      }
-      {% endfor -%}
+        "title": "{{ component.section.title._ ? component.section.title._ : component.section.code.displayName }}",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">{{ component.section.title._ ? component.section.title._ : component.section.code.displayName }}</div>"
+        },
+        "code": "{{ component.section.code }}",
+        "mode": "snapshot"
+      },
+      {% endfor %}
     ]
   },
   "request": {
