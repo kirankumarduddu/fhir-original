@@ -473,6 +473,53 @@
         "code": ""
       }
     },
+    "ValueSet/Timezone": {
+      "UTC": {
+        "code": "UTC"
+      },
+      "GMT": {
+        "code": "GMT"
+      },
+      "PST": {
+        "code": "PST"
+      },
+      "EST": {
+        "code": "EST"
+      },
+      "CET": {
+        "code": "CET"
+      },
+      "EET": {
+        "code": "EET"
+      },
+      "CST": {
+        "code": "CST"
+      },
+      "MST": {
+        "code": "MST"
+      },
+      "HST": {
+        "code": "HST"
+      },
+      "AKST": {
+        "code": "AKST"
+      },
+      "AEST": {
+        "code": "AEST"
+      },
+      "ACST": {
+        "code": "ACST"
+      },
+      "AWST": {
+        "code": "AWST"
+      },
+      "NZST": {
+        "code": "NZST"
+      },
+      "__default__": {
+        "code": ""
+      }
+   },
     "ValueSet/TelecomUse": {
       "HP": {
         "code": "home"
