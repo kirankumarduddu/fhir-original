@@ -14,7 +14,7 @@
             {% assign codes = composition.code | to_array -%}
             {% include 'DataType/CodeableConcept' CodeableConcept: codes.first -%}
         },
-        "date":"{{ composition.effectiveTime.value | format_as_date_time_with_timezone }}",
+        "date":"{{ composition.effectiveTime.value | format_as_date_time }}",
         "title":"{{ composition.title._ }}",
         "confidentiality":"{{ composition.confidentialityCode.code }}",
         "attester":
@@ -24,7 +24,7 @@
                 "mode":"legal",
                 {% endif -%}
                 {% if composition.legalAuthenticator -%}
-                "time":"{{ composition.legalAuthenticator.time.value | format_as_date_time_with_timezone }}",
+                "time":"{{ composition.legalAuthenticator.time.value | format_as_date_time }}",
                 {% endif -%}
                 "party":
                 {
@@ -39,8 +39,8 @@
             {
                 "period":
                 {
-                    "start":"{{ composition.documentationOf.serviceEvent.effectiveTime.low.value | format_as_date_time_with_timezone }}",
-                    "end":"{{ composition.documentationOf.serviceEvent.effectiveTime.high.value | format_as_date_time_with_timezone }}",
+                    "start":"{{ composition.documentationOf.serviceEvent.effectiveTime.low.value | format_as_date_time }}",
+                    "end":"{{ composition.documentationOf.serviceEvent.effectiveTime.high.value | format_as_date_time }}",
                 },
             },
         ],
@@ -79,4 +79,4 @@
         "method":"PUT",
         "url":"Composition/{{ ID }}",
     },
-}
+},
